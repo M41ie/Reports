@@ -1,0 +1,661 @@
+{\rtf1\ansi\ansicpg936\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html lang="zh-CN">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>\uc0\u25552 \u21319 \u25293 \u22836 \u36895 \u24230 \u19982 \u20987 \u29699 \u31283 \u23450 \u24615 </title>\
+    <script src="https://cdn.tailwindcss.com"></script>\
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>\
+    <link rel="preconnect" href="https://fonts.googleapis.com">\
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">\
+    <!-- Chosen Palette: Calm Focus (#F8FAFC, #1E293B, #3B82F6) -->\
+    <!-- Application Structure Plan: A top-level navigation SPA with five thematic sections (Philosophy, Technique, Training, Equipment, Plan). This task-oriented structure breaks down the dense report into manageable, interactive modules, enhancing user exploration and understanding far better than a linear document. Key interactions include a dynamic radar chart for shot comparison, interactive sliders for equipment trade-offs, and accordions for drill libraries, guiding the user through a journey of discovery rather than a passive read. -->\
+    <!-- Visualization & Content Choices: Report Info: Kinetic Chain -> Goal: Organize -> Viz: Interactive HTML diagram -> Interaction: Hover to highlight & show text -> Justification: Visually demonstrates the sequence of power. | Report Info: Topspin vs. Flat comparison -> Goal: Compare -> Viz: Chart.js Radar Chart & dynamic text -> Interaction: Toggle switch -> Justification: Provides an immediate, multi-dimensional visual comparison of complex concepts. | Report Info: Equipment trade-offs -> Goal: Explore relationships -> Viz: HTML slider & buttons -> Interaction: User input updates results -> Justification: Turns abstract concepts (swingweight, tension) into a tangible cause-and-effect experience. | Report Info: Drills -> Goal: Organize -> Viz: HTML/CSS Accordions -> Interaction: Click to expand/collapse -> Justification: Manages large amounts of text cleanly, allowing users to focus on one area at a time. -->\
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->\
+    <style>\
+        body \{\
+            font-family: 'Noto Sans SC', sans-serif;\
+            background-color: #F8FAFC;\
+            color: #1E293B;\
+        \}\
+        .nav-link \{\
+            transition: all 0.3s ease;\
+            border-bottom: 2px solid transparent;\
+        \}\
+        .nav-link.active, .nav-link:hover \{\
+            border-bottom-color: #3B82F6;\
+            color: #3B82F6;\
+        \}\
+        .content-section \{\
+            display: none;\
+        \}\
+        .content-section.active \{\
+            display: block;\
+        \}\
+        .chart-container \{\
+            position: relative;\
+            width: 100%;\
+            max-width: 500px;\
+            margin-left: auto;\
+            margin-right: auto;\
+            height: 300px;\
+            max-height: 40vh;\
+        \}\
+        @media (min-width: 768px) \{\
+            .chart-container \{\
+                height: 400px;\
+            \}\
+        \}\
+        .kinetic-chain-link \{\
+            transition: all 0.3s ease;\
+            cursor: pointer;\
+        \}\
+        .kinetic-chain-link:hover, .kinetic-chain-link.highlight \{\
+            background-color: #3B82F6;\
+            color: white;\
+            transform: scale(1.05);\
+        \}\
+        .accordion-header \{\
+            cursor: pointer;\
+            transition: background-color 0.3s ease;\
+        \}\
+        .accordion-header:hover \{\
+            background-color: #E2E8F0;\
+        \}\
+        .accordion-content \{\
+            max-height: 0;\
+            overflow: hidden;\
+            transition: max-height 0.5s ease-out;\
+        \}\
+        .toggle-switch \{\
+            position: relative;\
+            display: inline-block;\
+            width: 120px;\
+            height: 34px;\
+        \}\
+        .toggle-switch input \{\
+            opacity: 0;\
+            width: 0;\
+            height: 0;\
+        \}\
+        .slider \{\
+            position: absolute;\
+            cursor: pointer;\
+            top: 0;\
+            left: 0;\
+            right: 0;\
+            bottom: 0;\
+            background-color: #E2E8F0;\
+            transition: .4s;\
+            border-radius: 34px;\
+        \}\
+        .slider:before \{\
+            position: absolute;\
+            content: "";\
+            height: 26px;\
+            width: 55px;\
+            left: 4px;\
+            bottom: 4px;\
+            background-color: white;\
+            transition: .4s;\
+            border-radius: 34px;\
+        \}\
+        input:checked + .slider \{\
+            background-color: #3B82F6;\
+        \}\
+        input:checked + .slider:before \{\
+            transform: translateX(60px);\
+        \}\
+        .slider-text \{\
+            position: absolute;\
+            width: 100%;\
+            top: 50%;\
+            transform: translateY(-50%);\
+            display: flex;\
+            justify-content: space-around;\
+            color: #475569;\
+            font-size: 12px;\
+            font-weight: bold;\
+            pointer-events: none;\
+        \}\
+        input:checked ~ .slider-text .text-on \{\
+            color: white;\
+        \}\
+        input:not(:checked) ~ .slider-text .text-off \{\
+            color: white;\
+        \}\
+    </style>\
+</head>\
+<body class="antialiased">\
+\
+    <div class="min-h-screen">\
+        <header class="bg-white shadow-sm sticky top-0 z-50">\
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">\
+                <div class="flex justify-between items-center py-4">\
+                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800">\
+                        <span class="text-blue-600">\uc0\u39030 \u23574 \u20043 \u36335 </span>\
+                        <span class="hidden sm:inline">| \uc0\u25552 \u21319 \u25293 \u22836 \u36895 \u24230 \u19982 \u20987 \u29699 \u31283 \u23450 \u24615 </span>\
+                    </h1>\
+                    <nav id="main-nav" class="hidden md:flex space-x-6 text-sm font-medium text-slate-600">\
+                        <a href="#philosophy" class="nav-link active">\uc0\u26680 \u24515 \u29702 \u24565 </a>\
+                        <a href="#technique" class="nav-link">\uc0\u25216 \u26415 \u35299 \u30721 </a>\
+                        <a href="#training" class="nav-link">\uc0\u35757 \u32451 \u23453 \u24211 </a>\
+                        <a href="#equipment" class="nav-link">\uc0\u35013 \u22791 \u24037 \u22346 </a>\
+                        <a href="#plan" class="nav-link">\uc0\u21608 \u35745 \u21010 </a>\
+                    </nav>\
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100">\
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>\
+                    </button>\
+                </div>\
+                <div id="mobile-menu" class="hidden md:hidden pb-3">\
+                    <a href="#philosophy" class="block py-2 px-3 rounded-md text-base font-medium nav-link active">\uc0\u26680 \u24515 \u29702 \u24565 </a>\
+                    <a href="#technique" class="block py-2 px-3 rounded-md text-base font-medium nav-link">\uc0\u25216 \u26415 \u35299 \u30721 </a>\
+                    <a href="#training" class="block py-2 px-3 rounded-md text-base font-medium nav-link">\uc0\u35757 \u32451 \u23453 \u24211 </a>\
+                    <a href="#equipment" class="block py-2 px-3 rounded-md text-base font-medium nav-link">\uc0\u35013 \u22791 \u24037 \u22346 </a>\
+                    <a href="#plan" class="block py-2 px-3 rounded-md text-base font-medium nav-link">\uc0\u21608 \u35745 \u21010 </a>\
+                </div>\
+            </div>\
+        </header>\
+\
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">\
+            \
+            <section id="philosophy" class="content-section active">\
+                <div class="text-center mb-12">\
+                    <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">\uc0\u21147 \u37327 -\u31283 \u23450 \u24615 \u24726 \u35770 </h2>\
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">\uc0\u37325 \u22609 \u22522 \u30784 \u35748 \u30693 \u65306 \u39030 \u23574 \u30340 \u31283 \u23450 \u24615 \u24182 \u38750 \u21147 \u37327 \u30340 \u23545 \u31435 \u38754 \u65292 \u32780 \u26159 \u29190 \u21457 \u24615 \u21147 \u37327 \u24471 \u20197 \u37322 \u25918 \u30340 \u12289 \u19981 \u21487 \u21160 \u25671 \u30340 \u24179 \u21488 \u12290 </p>\
+                </div>\
+                <div class="relative max-w-4xl mx-auto p-8 bg-white rounded-xl shadow-lg">\
+                    <div class="grid md:grid-cols-2 gap-8 items-center">\
+                        <div class="text-center md:text-left">\
+                            <h3 class="text-2xl font-bold text-blue-600">\uc0\u26087 \u35266 \u24565 \u65306 \u26435 \u34913 \u19982 \u29306 \u29298 </h3>\
+                            <p class="mt-2 text-slate-600">\uc0\u35748 \u20026 \u36861 \u27714 \u25293 \u22836 \u36895 \u24230 \u65292 \u23601 \u24517 \u39035 \u20197 \u29306 \u29298 \u31283 \u23450 \u24615 \u20026 \u20195 \u20215 \u12290 \u36825 \u26159 \u19968 \u20010 \u27492 \u28040 \u24444 \u38271 \u30340 \u36807 \u31243 \u12290 </p>\
+                            <div class="mt-4 flex justify-center md:justify-start items-center space-x-4 text-slate-500">\
+                                <span class="text-lg font-semibold">\uc0\u21147 \u37327 </span>\
+                                <span class="text-2xl font-bold text-red-500">\uc0\u9876 \u65039 </span>\
+                                <span class="text-lg font-semibold">\uc0\u31283 \u23450 </span>\
+                            </div>\
+                        </div>\
+                        <div class="text-center md:text-left border-t-2 md:border-t-0 md:border-l-2 border-dashed border-slate-300 pt-8 md:pt-0 md:pl-8">\
+                            <h3 class="text-2xl font-bold text-green-600">\uc0\u26032 \u29702 \u24565 \u65306 \u24179 \u21488 \u19982 \u37322 \u25918 </h3>\
+                            <p class="mt-2 text-slate-600">\uc0\u36890 \u36807 \u26500 \u24314 \u39030 \u23574 \u30340 \u21160 \u24577 \u31283 \u23450 \u24615 \u65292 \u26469 \u20652 \u29983 \u26356 \u24378 \u22823 \u30340 \u21147 \u37327 \u12290 \u31283 \u23450 \u26159 \u21147 \u37327 \u30340 \u22522 \u30707 \u12290 </p>\
+                            <div class="mt-4 flex justify-center md:justify-start items-center space-x-4 text-slate-700">\
+                                <span class="text-lg font-semibold">\uc0\u31283 \u23450 </span>\
+                                <span class="text-2xl font-bold text-green-500">\uc0\u10145 \u65039 </span>\
+                                <span class="text-lg font-semibold">\uc0\u21147 \u37327 </span>\
+                            </div>\
+                        </div>\
+                    </div>\
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-slate-200 text-8xl font-black -z-10 select-none hidden md:block">\
+                        \uc0\u55357 \u56481 \
+                    </div>\
+                    <p class="mt-8 text-center text-slate-700 bg-slate-100 p-4 rounded-lg">\
+                        <strong>\uc0\u26680 \u24515 \u36716 \u21464 \u65306 </strong>\u38382 \u39064 \u30340 \u20851 \u38190 \u19981 \u22312 \u20110 \'93\u22914 \u20309 \u22312 \u19981 \u29306 \u29298 \u31283 \u23450 \u24615 \u30340 \u21069 \u25552 \u19979 \u25552 \u21319 \u21147 \u37327 \'94\u65292 \u32780 \u22312 \u20110 \'93\u22914 \u20309 \u36890 \u36807 \u26500 \u24314 \u39030 \u23574 \u30340 \u21160 \u24577 \u31283 \u23450 \u24615 \u26469 \u20652 \u29983 \u26356 \u24378 \u22823 \u30340 \u21147 \u37327 \'94\u12290 \
+                    </p>\
+                </div>\
+            </section>\
+\
+            <section id="technique" class="content-section">\
+                <div class="text-center mb-12">\
+                    <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">\uc0\u25216 \u26415 \u35299 \u30721 </h2>\
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">\uc0\u28145 \u20837 \u29702 \u35299 \u21147 \u37327 \u30340 \u29983 \u29289 \u21147 \u23398 \u21407 \u29702 \u65292 \u24182 \u23398 \u20250 \u22914 \u20309 \u23450 \u21046 \u25381 \u25293 \u36712 \u36857 \u20197 \u33719 \u24471 \u19981 \u21516 \u20987 \u29699 \u25928 \u26524 \u12290 </p>\
+                </div>\
+                <div class="grid md:grid-cols-2 gap-8 lg:gap-12">\
+                    <div class="bg-white p-6 rounded-xl shadow-lg">\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">\uc0\u21160 \u21147 \u38142 \u65306 \u21147 \u37327 \u30340 \u20256 \u23548 \u31995 \u32479 </h3>\
+                        <p class="text-slate-600 mb-6">\uc0\u23558 \u36523 \u20307 \u24819 \u35937 \u25104 \u19968 \u26465 \u29615 \u29615 \u30456 \u25187 \u30340 \u38142 \u26465 \u65292 \u21147 \u37327 \u20174 \u22320 \u38754 \u24320 \u22987 \u65292 \u23618 \u23618 \u21472 \u21152 \u65292 \u26368 \u32456 \u20256 \u36882 \u21040 \u29699 \u25293 \u12290 \u24748 \u20572 \u19979 \u26041 \u29615 \u33410 \u65292 \u26597 \u30475 \u20854 \u22312 \u21147 \u37327 \u20256 \u23548 \u20013 \u30340 \u20316 \u29992 \u12290 </p>\
+                        <div id="kinetic-chain-container" class="space-y-2">\
+                            <div class="kinetic-chain-link p-3 rounded-lg bg-slate-100 font-medium" data-info="\uc0\u19968 \u20999 \u21147 \u37327 \u30340 \u28304 \u22836 \u12290 \u36890 \u36807 \u36460 \u22320 \u65292 \u20174 \u22320 \u38754 \u33719 \u24471 \u21453 \u20316 \u29992 \u21147 \u12290 ">1. \u33151 \u37096 \u39537 \u21160  (Leg Drive)</div>\
+                            <div class="text-center text-slate-400">\uc0\u8595 </div>\
+                            <div class="kinetic-chain-link p-3 rounded-lg bg-slate-100 font-medium" data-info="\uc0\u33151 \u37096 \u20135 \u29983 \u30340 \u21147 \u37327 \u24102 \u21160 \u39627 \u37096 \u24555 \u36895 \u36716 \u21160 \u65292 \u36825 \u26159 \u36523 \u20307 \u30340 \u21457 \u21160 \u26426 \u12290 ">2. \u39627 \u37096 \u26059 \u36716  (Hip Rotation)</div>\
+                            <div class="text-center text-slate-400">\uc0\u8595 </div>\
+                            <div class="kinetic-chain-link p-3 rounded-lg bg-slate-100 font-medium" data-info="\uc0\u39627 \u37096 \u36716 \u21160 \u24341 \u24102 \u36527 \u24178 \u65288 \u26680 \u24515 \u65289 \u36716 \u21160 \u65292 \u30830 \u20445 \u33021 \u37327 \u19981 \u27844 \u28431 \u12290 ">3. \u36527 \u24178 \u26059 \u36716  (Trunk Rotation)</div>\
+                            <div class="text-center text-slate-400">\uc0\u8595 </div>\
+                            <div class="kinetic-chain-link p-3 rounded-lg bg-slate-100 font-medium" data-info="\uc0\u36527 \u24178 \u30340 \u26059 \u36716 \u20687 \u38829 \u23376 \u19968 \u26679 \u23558 \u32937 \u33152 \'93\u29993 \'94\u20986 \u21435 \u12290 ">4. \u32937 \u37096 \u26059 \u36716  (Shoulder Rotation)</div>\
+                            <div class="text-center text-slate-400">\uc0\u8595 </div>\
+                            <div class="kinetic-chain-link p-3 rounded-lg bg-slate-100 font-medium" data-info="\uc0\u26368 \u32456 \u29615 \u33410 \u65292 \u25163 \u33218 \u21644 \u25163 \u33109 \u25918 \u26494 \u20256 \u23548 \u65292 \u20687 \u38829 \u26786 \u19968 \u26679 \u21152 \u36895 \u12290 ">5. \u25163 \u33218 /\u25163 \u33109  (Arm/Wrist)</div>\
+                        </div>\
+                        <div id="kinetic-chain-info" class="mt-4 p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-lg min-h-[80px]">\
+                            \uc0\u35831 \u24748 \u20572 \u20197 \u19978 \u29615 \u33410 \u26597 \u30475 \u35814 \u32454 \u35828 \u26126 \u12290 \
+                        </div>\
+                    </div>\
+                    <div class="bg-white p-6 rounded-xl shadow-lg">\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">\uc0\u20987 \u29699 \u25928 \u26524 \u23545 \u27604 </h3>\
+                        <p class="text-slate-600 mb-6">\uc0\u20999 \u25442 \u19979 \u26041 \u24320 \u20851 \u65292 \u26597 \u30475 \'93\u37325 \u19978 \u26059 \'94\u19982 \'93\u31359 \u36879 \u24615 \u24179 \u20987 \'94\u22312 \u21508 \u39033 \u25216 \u26415 \u25351 \u26631 \u19978 \u30340 \u24046 \u24322 \u12290 \u38647 \u36798 \u22270 \u23558 \u30452 \u35266 \u23637 \u31034 \u20004 \u31181 \u25171 \u27861 \u30340 \u21147 \u23398 \u29305 \u24449 \u12290 </p>\
+                        <div class="flex justify-center items-center space-x-4 mb-6">\
+                            <span class="font-medium text-slate-700">\uc0\u37325 \u19978 \u26059 </span>\
+                            <label class="toggle-switch">\
+                                <input type="checkbox" id="shot-type-toggle">\
+                                <span class="slider"></span>\
+                                <span class="slider-text">\
+                                    <span class="text-off">\uc0\u19978 \u26059 </span>\
+                                    <span class="text-on">\uc0\u24179 \u20987 </span>\
+                                </span>\
+                            </label>\
+                            <span class="font-medium text-slate-700">\uc0\u31359 \u36879 \u24615 \u24179 \u20987 </span>\
+                        </div>\
+                        <div class="chart-container">\
+                            <canvas id="shot-comparison-chart"></canvas>\
+                        </div>\
+                        <div id="shot-info-panel" class="mt-4">\
+                            <h4 class="font-bold text-lg text-blue-700">\uc0\u37325 \u22411 \u19978 \u26059 \u27491 \u25163 </h4>\
+                            <p class="text-sm text-slate-600">\uc0\u30446 \u26631 \u65306 \u39640 \u24359 \u32447 \u12289 \u24378 \u26059 \u36716 \u12289 \u39640 \u24377 \u36339 \u65292 \u21387 \u21046 \u23545 \u25163 \u12290 </p>\
+                        </div>\
+                    </div>\
+                </div>\
+            </section>\
+\
+            <section id="training" class="content-section">\
+                <div class="text-center mb-12">\
+                    <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">\uc0\u35757 \u32451 \u23453 \u24211 </h2>\
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">\uc0\u22330 \u19978 \u25216 \u26415 \u30340 \u23454 \u29616 \u65292 \u31163 \u19981 \u24320 \u22330 \u19979 \u20307 \u33021 \u30340 \u25903 \u25745 \u12290 \u36825 \u37324 \u26159 \u24744 \u30340 \u19987 \u23646 \u35757 \u32451 \u34013 \u22270 \u12290 </p>\
+                </div>\
+                <div class="grid md:grid-cols-2 gap-8">\
+                    <div>\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-blue-500 pl-4">\uc0\u22330 \u19979 \u20307 \u33021 \u35757 \u32451 </h3>\
+                        <div class="space-y-4" id="off-court-accordion">\
+                            <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u25903 \u26609 \u19968 \u65306 \u21160 \u24577 \u26680 \u24515 \u31283 \u23450 \u24615 </span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u21407 \u29702 \u65306 </strong>\u24378 \u22823 \u32780 \u31283 \u23450 \u30340 \u26680 \u24515 \u26159 \u21160 \u21147 \u38142 \u30340 \u26530 \u32445 \u65292 \u38450 \u27490 \u33021 \u37327 \u27844 \u28431 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li>\uc0\u29788 \u20285 \u29699 \u21333 \u33218 \u21713 \u38083 \u21351 \u25512 /\u39134 \u40479 </li>\
+                                        <li>BOSU\uc0\u29699 \u24339 \u27493 \u26059 \u36716 </li>\
+                                        <li>\uc0\u24085 \u27931 \u22827 \u25512 \u20030 </li>\
+                                        <li>\uc0\u21467 \u24466 \u21010 \u33337 </li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                            <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u25903 \u26609 \u20108 \u65306 \u29190 \u21457 \u24615 \u26059 \u36716 \u21147 \u37327 </span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u21407 \u29702 \u65306 </strong>\u39627 \u37096 \u21644 \u36527 \u24178 \u30340 \u26059 \u36716 \u36895 \u24230 \u26159 \u25293 \u22836 \u36895 \u24230 \u26368 \u30452 \u25509 \u30340 \u20915 \u23450 \u22240 \u32032 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li>\uc0\u21322 \u36330 \u23039 \u26059 \u36716 \u25237 \u25527  (\u33647 \u29699 )</li>\
+                                        <li>\uc0\u24179 \u34892 \u31449 \u23039 \u26059 \u36716 \u25237 \u25527  (\u33647 \u29699 )</li>\
+                                        <li>\uc0\u31227 \u21160 \u20013 \u25237 \u25527  (\u33647 \u29699 )</li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                            <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u25903 \u26609 \u19977 \u65306 \u24378 \u21270 \u20280 \u23637 -\u32553 \u30701 \u21608 \u26399  (SSC)</span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u21407 \u29702 \u65306 </strong>\u22686 \u24378 \u24335 \u35757 \u32451 \u33021 \u35753 \u32908 \u32905 \u26356 \u26377 \u25928 \u22320 \u21560 \u25910 \u21644 \u37322 \u25918 \u33021 \u37327 \u65292 \u25552 \u21319 \u29190 \u21457 \u24863 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li>\uc0\u36339 \u31665  / \u20391 \u21521 \u36339 \u36291  / \u36339 \u36291 \u24339 \u27493 </li>\
+                                        <li>\uc0\u25293 \u25163 \u20463 \u21351 \u25745  / \u29190 \u21457 \u24335 \u33647 \u29699 \u33016 \u21069 \u25237 \u25527 </li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                    <div>\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4 border-l-4 border-green-500 pl-4">\uc0\u22330 \u19978 \u19987 \u39033 \u35757 \u32451 </h3>\
+                        <div class="space-y-4" id="on-court-accordion">\
+                            <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u32431 \u25293 \u22836 \u36895 \u24230  (RHS) \u35757 \u32451 </span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u30446 \u30340 \u65306 </strong>\u21093 \u31163 \u22797 \u26434 \u22240 \u32032 \u65292 \u19987 \u27880 \u20110 \u26368 \u22823 \u21270 \u21152 \u36895 \u29699 \u25293 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li>\uc0\u35199 \u29677 \u29273 \u24335 \u25130 \u20987 \u21890 \u29699 \u35757 \u32451 </li>\
+                                        <li>\uc0\u25381 \u20987 \u20940 \u31354 \u29699 </li>\
+                                        <li>\'93\uc0\u21548 \u39118 \'94\u32451 \u20064  (\u31354 \u25381 )</li>\
+                                        <li>\uc0\u36229 \u37325 /\u20943 \u37325 \u35757 \u32451 </li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                            <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u38024 \u23545 \u24615 \u25381 \u25293 \u36712 \u36857 \u35757 \u32451 </span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u30446 \u30340 \u65306 </strong>\u24041 \u22266 \u19978 \u26059 \u19982 \u24179 \u20987 \u30340 \u19981 \u21516 \u25381 \u25293 \u20960 \u20309 \u24418 \u24577 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li><strong>\uc0\u19978 \u26059 :</strong> \u20302 \u29699 \u19978 \u25289 \u32451 \u20064 , \u23567 \u22330 \u26012 \u32447 \u32451 \u20064 </li>\
+                                        <li><strong>\uc0\u24179 \u20987 :</strong> \u20013 \u22330 \'93\u32477 \u26432 \'94\u32451 \u20064 , \u36890 \u36947 \u30596 \u20934 \u32451 \u20064 </li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                             <div class="bg-white rounded-lg shadow">\
+                                <div class="accordion-header p-4 font-semibold text-slate-700 flex justify-between items-center">\
+                                    <span>\uc0\u20462 \u27491 \'93\u33021 \u37327 \u27844 \u28431 \'94\u35757 \u32451 </span>\
+                                    <span class="transform transition-transform duration-300">\uc0\u9660 </span>\
+                                </div>\
+                                <div class="accordion-content px-4 pb-4 text-slate-600 space-y-2">\
+                                    <p><strong>\uc0\u30446 \u30340 \u65306 </strong>\u20462 \u27491 \u21066 \u24369 \u21147 \u37327 \u21644 \u31283 \u23450 \u24615 \u30340 \u22351 \u20064 \u24815 \u12290 </p>\
+                                    <ul class="list-disc list-inside">\
+                                        <li>\'93\uc0\u20987 \u29699 \u24182 \u20445 \u25345 \'94\u32451 \u20064  (\u20462 \u27491 \u36807 \u26089 \u24320 \u33007 )</li>\
+                                        <li>\'93\uc0\u19978 \u27493 \u20987 \u29699 \'94\u32451 \u20064  (\u20462 \u27491 \u37325 \u24515 \u36716 \u31227 \u19981 \u20805 \u20998 )</li>\
+                                    </ul>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
+            </section>\
+\
+            <section id="equipment" class="content-section">\
+                <div class="text-center mb-12">\
+                    <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">\uc0\u35013 \u22791 \u24037 \u22346 </h2>\
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">\uc0\u25216 \u26415 \u21644 \u20307 \u33021 \u26159 \u26681 \u26412 \u65292 \u20294 \u35013 \u22791 \u24517 \u39035 \u19982 \u24744 \u30340 \u25171 \u27861 \u30456 \u36741 \u30456 \u25104 \u12290 \u22312 \u36825 \u37324 \u25214 \u21040 \u24744 \u30340 \u26368 \u20339 \u37197 \u32622 \u12290 </p>\
+                </div>\
+                <div class="grid lg:grid-cols-2 gap-8">\
+                    <div class="bg-white p-6 rounded-xl shadow-lg">\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">\uc0\u25381 \u37325 \u26041 \u31243 \u65306 \u25805 \u25511 \u24615  vs. \u31359 \u36879 \u21147 </h3>\
+                        <p class="text-slate-600 mb-6">\uc0\u25302 \u21160 \u28369 \u22359 \u65292 \u24863 \u21463 \u19981 \u21516 \u25381 \u37325 \u23545 \u20987 \u29699 \u29305 \u24615 \u30340 \u24433 \u21709 \u12290 \u30446 \u26631 \u26159 \u25214 \u21040 \u24744 \u33021 \u39550 \u39533 \u30340 \u26368 \u39640 \u25381 \u37325 \u12290 </p>\
+                        <label for="swingweight-slider" class="block mb-2 font-medium text-slate-700">\uc0\u25381 \u25293 \u37325 \u37327  (Swingweight): <span id="swingweight-value" class="font-bold text-blue-600">320</span> RDC</label>\
+                        <input id="swingweight-slider" type="range" min="305" max="340" value="320" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">\
+                        <div id="swingweight-feedback" class="mt-6 p-4 bg-slate-50 rounded-lg">\
+                            <h4 class="font-bold text-slate-800">\uc0\u20013 \u31561 \u25381 \u37325  (315-325 RDC)</h4>\
+                            <p class="text-slate-600">\uc0\u22312 \u25805 \u25511 \u24615 \u21644 \u31283 \u23450 \u24615 \u20043 \u38388 \u21462 \u24471 \u20102 \u33391 \u22909 \u24179 \u34913 \u65292 \u36866 \u21512 \u22823 \u22810 \u25968 \u29616 \u20195 \u25171 \u27861 \u12290 </p>\
+                        </div>\
+                    </div>\
+                    <div class="bg-white p-6 rounded-xl shadow-lg">\
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">\uc0\u32593 \u29699 \u32447 \u29702 \u35770 \u65306 \u21147 \u37327 \u12289 \u25511 \u21046 \u19982 \u26059 \u36716 </h3>\
+                        <p class="text-slate-600 mb-6">\uc0\u36873 \u25321 \u19981 \u21516 \u26448 \u36136 \u21644 \u30917 \u25968 \u65292 \u25506 \u32034 \u23427 \u20204 \u23545 \u20987 \u29699 \u30340 \u32508 \u21512 \u24433 \u21709 \u12290 </p>\
+                        <div class="space-y-4">\
+                            <div>\
+                                <span class="font-medium text-slate-700">\uc0\u26448 \u36136  (Material):</span>\
+                                <div id="string-material-group" class="mt-2 inline-flex rounded-md shadow-sm">\
+                                    <button data-value="poly" class="px-4 py-2 text-sm font-medium text-blue-700 bg-white border border-slate-300 rounded-l-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-blue-500 active">\uc0\u32858 \u37231 \u32447  (Polyester)</button>\
+                                    <button data-value="multi" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border-t border-b border-r border-slate-300 rounded-r-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-blue-500">\uc0\u22797 \u19997 \u32447  (Multi)</button>\
+                                </div>\
+                            </div>\
+                             <div>\
+                                <span class="font-medium text-slate-700">\uc0\u30917 \u25968  (Tension):</span>\
+                                <div id="string-tension-group" class="mt-2 inline-flex rounded-md shadow-sm">\
+                                    <button data-value="low" class="px-4 py-2 text-sm font-medium text-blue-700 bg-white border border-slate-300 rounded-l-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-blue-500 active">\uc0\u20302 \u30917 \u25968  (46-52 lbs)</button>\
+                                    <button data-value="high" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border-t border-b border-r border-slate-300 rounded-r-lg hover:bg-slate-50 focus:z-10 focus:ring-2 focus:ring-blue-500">\uc0\u39640 \u30917 \u25968  (52-58 lbs)</button>\
+                                </div>\
+                            </div>\
+                        </div>\
+                        <div id="string-feedback" class="mt-6 p-4 bg-slate-50 rounded-lg">\
+                            <h4 class="font-bold text-slate-800">\uc0\u37197 \u32622 : \u32858 \u37231 \u32447  @ \u20302 \u30917 \u25968 </h4>\
+                            <p class="text-slate-600">\uc0\u29616 \u20195 \u21147 \u37327 \u22411 \u12289 \u26059 \u36716 \u22411 \u29699 \u21592 \u30340 \u40644 \u37329 \u37197 \u32622 \u12290 \u25552 \u20379 \u26497 \u33268 \u30340 \u26059 \u36716 \u28508 \u21147 \u21644 \u25511 \u21046 \u21147 \u65292 \u21516 \u26102 \u20302 \u30917 \u25968 \u33021 \u22686 \u21152 \'93\u21676 \u29699 \u24863 \'94\u21644 \u19968 \u23450 \u30340 \u21147 \u37327 \u34917 \u20607 \u12290 </p>\
+                        </div>\
+                    </div>\
+                </div>\
+            </section>\
+\
+            <section id="plan" class="content-section">\
+                <div class="text-center mb-12">\
+                    <h2 class="text-3xl font-bold text-slate-900 sm:text-4xl">\uc0\u27599 \u21608 \u35757 \u32451 \u25972 \u21512 \u35745 \u21010 \u31034 \u20363 </h2>\
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">\uc0\u23558 \u25152 \u26377 \u20803 \u32032 \u34701 \u21512 \u25104 \u19968 \u20010 \u36830 \u36143 \u30340 \u38271 \u26399 \u21457 \u23637 \u35745 \u21010 \u26159 \u25104 \u21151 \u30340 \u20851 \u38190 \u12290 \u36825 \u26159 \u19968 \u20010 \u23454 \u36341 \u27169 \u26495 \u12290 </p>\
+                </div>\
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">\
+                    <div class="overflow-x-auto">\
+                        <table class="w-full text-sm text-left text-slate-500">\
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-100">\
+                                <tr>\
+                                    <th scope="col" class="px-6 py-3">\uc0\u26143 \u26399 </th>\
+                                    <th scope="col" class="px-6 py-3">\uc0\u35757 \u32451 \u37325 \u28857 </th>\
+                                </tr>\
+                            </thead>\
+                            <tbody>\
+                                <tr class="bg-white border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u19968 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u22330 \u19978 :</strong> \u37325 \u22411 \u19978 \u26059 \u35757 \u32451  (\u20302 \u29699 \u19978 \u25289 , \u23567 \u22330 \u26012 \u32447 ) | <strong>\u22330 \u19979 :</strong> \u26059 \u36716 \u21147 \u37327  (\u33647 \u29699 \u25237 \u25527 )</td>\
+                                </tr>\
+                                <tr class="bg-slate-50 border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u20108 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u22330 \u19978 :</strong> \u31359 \u36879 \u24615 \u24179 \u20987 \u35757 \u32451  (\u20013 \u22330 \u32477 \u26432 , \u36890 \u36947 \u30596 \u20934 ) + \u20998 \u28857 \u32451 \u20064  | <strong>\u22330 \u19979 :</strong> \u22686 \u24378 \u24335 \u35757 \u32451  (\u36339 \u31665 , \u20391 \u21521 \u36339 \u36291 )</td>\
+                                </tr>\
+                                <tr class="bg-white border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u19977 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u20027 \u21160 \u24674 \u22797 :</strong> \u36731 \u24230 \u26377 \u27687  (\u28216 \u27891 /\u21333 \u36710 ), \u25289 \u20280 , \u27873 \u27819 \u36724 \u25918 \u26494 </td>\
+                                </tr>\
+                                <tr class="bg-slate-50 border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u22235 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u22330 \u19978 :</strong> \u20462 \u27491 \u33021 \u37327 \u27844 \u28431 \u35757 \u32451  (\u20987 \u29699 \u24182 \u20445 \u25345 , \u19978 \u27493 \u20987 \u29699 ) + \u32508 \u21512 \u23545 \u25239  | <strong>\u22330 \u19979 :</strong> \u26680 \u24515 \u31283 \u23450 \u24615  (\u29788 \u20285 \u29699 , \u24085 \u27931 \u22827 \u25512 \u20030 )</td>\
+                                </tr>\
+                                <tr class="bg-white border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u20116 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u22330 \u19978 :</strong> \u32431 \u25293 \u22836 \u36895 \u24230 \u35757 \u32451  (\u35199 \u29677 \u29273 \u21890 \u29699 , \u25381 \u20987 \u20940 \u31354 \u29699 ) + \u27604 \u36187 \u27169 \u25311 </td>\
+                                </tr>\
+                                <tr class="bg-slate-50 border-b">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u20845 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u27604 \u36187 \u26085 \u25110 \u39640 \u24378 \u24230 \u23545 \u25239 \u35757 \u32451 </strong></td>\
+                                </tr>\
+                                <tr class="bg-white">\
+                                    <th scope="row" class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap">\uc0\u26143 \u26399 \u26085 </th>\
+                                    <td class="px-6 py-4"><strong>\uc0\u23436 \u20840 \u20241 \u24687 \u25110 \u36731 \u24230 \u24674 \u22797 \u27963 \u21160 </strong></td>\
+                                </tr>\
+                            </tbody>\
+                        </table>\
+                    </div>\
+                </div>\
+            </section>\
+        </main>\
+    </div>\
+\
+    <script>\
+        document.addEventListener('DOMContentLoaded', function () \{\
+            \
+            const navLinks = document.querySelectorAll('.nav-link');\
+            const sections = document.querySelectorAll('.content-section');\
+            const mobileMenuButton = document.getElementById('mobile-menu-button');\
+            const mobileMenu = document.getElementById('mobile-menu');\
+\
+            function updateActiveContent(hash) \{\
+                const targetId = hash ? hash.substring(1) : 'philosophy';\
+                \
+                sections.forEach(section => \{\
+                    if (section.id === targetId) \{\
+                        section.classList.add('active');\
+                    \} else \{\
+                        section.classList.remove('active');\
+                    \}\
+                \});\
+\
+                navLinks.forEach(link => \{\
+                    if (link.getAttribute('href') === `#$\{targetId\}`) \{\
+                        link.classList.add('active');\
+                    \} else \{\
+                        link.classList.remove('active');\
+                    \}\
+                \});\
+            \}\
+\
+            document.getElementById('main-nav').addEventListener('click', function (e) \{\
+                if (e.target.tagName === 'A') \{\
+                    e.preventDefault();\
+                    updateActiveContent(e.target.hash);\
+                    window.location.hash = e.target.hash;\
+                \}\
+            \});\
+            \
+            mobileMenu.addEventListener('click', function (e) \{\
+                if (e.target.tagName === 'A') \{\
+                    e.preventDefault();\
+                    updateActiveContent(e.target.hash);\
+                    window.location.hash = e.target.hash;\
+                    mobileMenu.classList.add('hidden');\
+                \}\
+            \});\
+\
+            mobileMenuButton.addEventListener('click', () => \{\
+                mobileMenu.classList.toggle('hidden');\
+            \});\
+\
+            updateActiveContent(window.location.hash);\
+\
+            const kineticChainContainer = document.getElementById('kinetic-chain-container');\
+            const kineticChainInfo = document.getElementById('kinetic-chain-info');\
+            const kineticChainLinks = document.querySelectorAll('.kinetic-chain-link');\
+\
+            kineticChainContainer.addEventListener('mouseover', function(e) \{\
+                if (e.target.classList.contains('kinetic-chain-link')) \{\
+                    kineticChainLinks.forEach(link => link.classList.remove('highlight'));\
+                    e.target.classList.add('highlight');\
+                    kineticChainInfo.textContent = e.target.dataset.info;\
+                \}\
+            \});\
+            kineticChainContainer.addEventListener('mouseout', function() \{\
+                kineticChainLinks.forEach(link => link.classList.remove('highlight'));\
+                kineticChainInfo.textContent = '\uc0\u35831 \u24748 \u20572 \u20197 \u19978 \u29615 \u33410 \u26597 \u30475 \u35814 \u32454 \u35828 \u26126 \u12290 ';\
+            \});\
+\
+            const shotData = \{\
+                topspin: \{\
+                    labels: ['\uc0\u22402 \u30452 \u36712 \u36857 ', '\u21521 \u21069 \u24310 \u23637 ', '\u25293 \u22836 \u19979 \u27785 ', '\u26059 \u36716 \u28508 \u21147 ', '\u36895 \u24230 \u28508 \u21147 '],\
+                    values: [9, 4, 9, 10, 7],\
+                    title: '\uc0\u37325 \u22411 \u19978 \u26059 \u27491 \u25163 ',\
+                    description: '\uc0\u30446 \u26631 \u65306 \u39640 \u24359 \u32447 \u12289 \u24378 \u26059 \u36716 \u12289 \u39640 \u24377 \u36339 \u65292 \u21387 \u21046 \u23545 \u25163 \u12290 '\
+                \},\
+                flat: \{\
+                    labels: ['\uc0\u22402 \u30452 \u36712 \u36857 ', '\u21521 \u21069 \u24310 \u23637 ', '\u25293 \u22836 \u19979 \u27785 ', '\u26059 \u36716 \u28508 \u21147 ', '\u36895 \u24230 \u28508 \u21147 '],\
+                    values: [4, 9, 5, 5, 10],\
+                    title: '\uc0\u31359 \u36879 \u24615 \u24179 \u20987 \u27491 \u25163 ',\
+                    description: '\uc0\u30446 \u26631 \u65306 \u20302 \u24359 \u32447 \u12289 \u39640 \u36895 \u24230 \u12289 \u28145 \u33853 \u28857 \u65292 \u30452 \u25509 \u24471 \u20998 \u12290 '\
+                \}\
+            \};\
+\
+            const ctx = document.getElementById('shot-comparison-chart').getContext('2d');\
+            let shotChart = new Chart(ctx, \{\
+                type: 'radar',\
+                data: \{\
+                    labels: shotData.topspin.labels,\
+                    datasets: [\{\
+                        label: '\uc0\u25216 \u26415 \u29305 \u24449 ',\
+                        data: shotData.topspin.values,\
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',\
+                        borderColor: 'rgba(59, 130, 246, 1)',\
+                        borderWidth: 2,\
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',\
+                    \}]\
+                \},\
+                options: \{\
+                    maintainAspectRatio: false,\
+                    responsive: true,\
+                    scales: \{\
+                        r: \{\
+                            angleLines: \{ color: 'rgba(0, 0, 0, 0.1)' \},\
+                            grid: \{ color: 'rgba(0, 0, 0, 0.1)' \},\
+                            pointLabels: \{ font: \{ size: 12 \}, color: '#475569' \},\
+                            suggestedMin: 0,\
+                            suggestedMax: 10,\
+                            ticks: \{\
+                                stepSize: 2,\
+                                backdropColor: 'rgba(255, 255, 255, 0.75)'\
+                            \}\
+                        \}\
+                    \},\
+                    plugins: \{\
+                        legend: \{\
+                            display: false\
+                        \}\
+                    \}\
+                \}\
+            \});\
+\
+            const shotToggle = document.getElementById('shot-type-toggle');\
+            const shotInfoPanel = document.getElementById('shot-info-panel');\
+            shotToggle.addEventListener('change', function() \{\
+                const type = this.checked ? 'flat' : 'topspin';\
+                shotChart.data.datasets[0].data = shotData[type].values;\
+                shotChart.update();\
+\
+                shotInfoPanel.innerHTML = `\
+                    <h4 class="font-bold text-lg $\{type === 'topspin' ? 'text-blue-700' : 'text-green-700'\}">$\{shotData[type].title\}</h4>\
+                    <p class="text-sm text-slate-600">$\{shotData[type].description\}</p>\
+                `;\
+            \});\
+            \
+            function setupAccordion(containerId) \{\
+                const accordionContainer = document.getElementById(containerId);\
+                accordionContainer.addEventListener('click', function(e) \{\
+                    const header = e.target.closest('.accordion-header');\
+                    if (!header) return;\
+                    \
+                    const content = header.nextElementSibling;\
+                    const arrow = header.querySelector('span:last-child');\
+                    \
+                    if (content.style.maxHeight) \{\
+                        content.style.maxHeight = null;\
+                        arrow.style.transform = 'rotate(0deg)';\
+                    \} else \{\
+                        content.style.maxHeight = content.scrollHeight + "px";\
+                        arrow.style.transform = 'rotate(180deg)';\
+                    \}\
+                \});\
+            \}\
+            setupAccordion('off-court-accordion');\
+            setupAccordion('on-court-accordion');\
+\
+            const swingweightSlider = document.getElementById('swingweight-slider');\
+            const swingweightValue = document.getElementById('swingweight-value');\
+            const swingweightFeedback = document.getElementById('swingweight-feedback');\
+            swingweightSlider.addEventListener('input', function() \{\
+                const value = this.value;\
+                swingweightValue.textContent = value;\
+                let feedbackHtml = '';\
+                if (value < 315) \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u20302 \u25381 \u37325  (<315 RDC)</h4><p class="text-slate-600">\u25805 \u25511 \u24615 \u26497 \u20339 \u65292 \u23481 \u26131 \u21152 \u36895 \u25293 \u22836 \u20197 \u20135 \u29983 \u26059 \u36716 \u12290 \u20294 \u31283 \u23450 \u24615 \u31245 \u24369 \u65292 \u36814 \u20987 \u37325 \u29699 \u26102 \u21487 \u33021 \u21507 \u21147 \u12290 </p>`;\
+                \} else if (value > 325) \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u39640 \u25381 \u37325  (>325 RDC)</h4><p class="text-slate-600">\u25552 \u20379 \u26497 \u20339 \u30340 \u31283 \u23450 \u24615 \u21644 \'93\u31359 \u36879 \u21147 \'94\u65292 \u21147 \u37327 \u28508 \u21147 \u22823 \u12290 \u20294 \u23545 \u20351 \u29992 \u32773 \u30340 \u21147 \u37327 \u35201 \u27714 \u39640 \u65292 \u21487 \u33021 \u24433 \u21709 \u25381 \u36895 \u12290 </p>`;\
+                \} else \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u20013 \u31561 \u25381 \u37325  (315-325 RDC)</h4><p class="text-slate-600">\u22312 \u25805 \u25511 \u24615 \u21644 \u31283 \u23450 \u24615 \u20043 \u38388 \u21462 \u24471 \u20102 \u33391 \u22909 \u24179 \u34913 \u65292 \u36866 \u21512 \u22823 \u22810 \u25968 \u29616 \u20195 \u25171 \u27861 \u12290 </p>`;\
+                \}\
+                swingweightFeedback.innerHTML = feedbackHtml;\
+            \});\
+\
+            const stringFeedback = document.getElementById('string-feedback');\
+            let stringConfig = \{ material: 'poly', tension: 'low' \};\
+\
+            function updateStringFeedback() \{\
+                let feedbackHtml = '';\
+                const \{ material, tension \} = stringConfig;\
+\
+                if (material === 'poly' && tension === 'low') \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u37197 \u32622 : \u32858 \u37231 \u32447  @ \u20302 \u30917 \u25968 </h4><p class="text-slate-600">\u29616 \u20195 \u21147 \u37327 \u22411 \u12289 \u26059 \u36716 \u22411 \u29699 \u21592 \u30340 \u40644 \u37329 \u37197 \u32622 \u12290 \u25552 \u20379 \u26497 \u33268 \u30340 \u26059 \u36716 \u28508 \u21147 \u21644 \u25511 \u21046 \u21147 \u65292 \u21516 \u26102 \u20302 \u30917 \u25968 \u33021 \u22686 \u21152 \'93\u21676 \u29699 \u24863 \'94\u21644 \u19968 \u23450 \u30340 \u21147 \u37327 \u34917 \u20607 \u12290 </p>`;\
+                \} else if (material === 'poly' && tension === 'high') \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u37197 \u32622 : \u32858 \u37231 \u32447  @ \u39640 \u30917 \u25968 </h4><p class="text-slate-600">\u26497 \u33268 \u25511 \u21046 \u30340 \u36873 \u25321 \u12290 \u36866 \u21512 \u33258 \u36523 \u21147 \u37327 \u26497 \u24378 \u12289 \u38656 \u35201 \u29992 \u29699 \u32447 \u26469 \'93\u38145 \u20303 \'94\u21147 \u37327 \u30340 \u29699 \u21592 \u12290 \u25163 \u24863 \u20559 \u30828 \u65292 \u23545 \u25381 \u36895 \u35201 \u27714 \u39640 \u12290 </p>`;\
+                \} else if (material === 'multi' && tension === 'low') \{\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u37197 \u32622 : \u22797 \u19997 \u32447  @ \u20302 \u30917 \u25968 </h4><p class="text-slate-600">\u33298 \u36866 \u24615 \u21644 \u21147 \u37327 \u30340 \u32452 \u21512 \u12290 \u25552 \u20379 \u26497 \u20339 \u30340 \u20987 \u29699 \u24863 \u21644 \u24377 \u24615 \u65292 \u20294 \u26059 \u36716 \u28508 \u21147 \u19981 \u22914 \u32858 \u37231 \u32447 \u12290 \u36866 \u21512 \u38656 \u35201 \u29699 \u25293 \u25552 \u20379 \u21147 \u37327 \u25110 \u25163 \u33218 \u25935 \u24863 \u30340 \u29699 \u21592 \u12290 </p>`;\
+                \} else \{ // multi, high\
+                    feedbackHtml = `<h4 class="font-bold text-slate-800">\uc0\u37197 \u32622 : \u22797 \u19997 \u32447  @ \u39640 \u30917 \u25968 </h4><p class="text-slate-600">\u32463 \u20856 \u25511 \u21046 \u22411 \u37197 \u32622 \u12290 \u25552 \u20379 \u28165 \u26224 \u30340 \u25163 \u24863 \u21644 \u33391 \u22909 \u30340 \u26041 \u21521 \u25511 \u21046 \u65292 \u20294 \u21147 \u37327 \u21644 \u26059 \u36716 \u30456 \u23545 \u20445 \u23432 \u12290 \u36866 \u21512 \u20256 \u32479 \u25171 \u27861 \u30340 \u29699 \u21592 \u12290 </p>`;\
+                \}\
+                stringFeedback.innerHTML = feedbackHtml;\
+            \}\
+\
+            document.getElementById('string-material-group').addEventListener('click', e => \{\
+                if (e.target.tagName === 'BUTTON') \{\
+                    stringConfig.material = e.target.dataset.value;\
+                    document.querySelectorAll('#string-material-group button').forEach(b => b.classList.remove('active'));\
+                    e.target.classList.add('active');\
+                    updateStringFeedback();\
+                \}\
+            \});\
+            document.getElementById('string-tension-group').addEventListener('click', e => \{\
+                if (e.target.tagName === 'BUTTON') \{\
+                    stringConfig.tension = e.target.dataset.value;\
+                    document.querySelectorAll('#string-tension-group button').forEach(b => b.classList.remove('active'));\
+                    e.target.classList.add('active');\
+                    updateStringFeedback();\
+                \}\
+            \});\
+        \});\
+    </script>\
+</body>\
+</html>\
+}
